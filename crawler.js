@@ -196,6 +196,9 @@ async function circleSearch(page) {
         if (currentProp === 'shelvesLink') {
             // 市场/bundleid
             console.log('shelvesLink1')
+            console.log('*******************')
+            console.log('获取bundleID,market,appName,version')
+            console.log('*******************')
             var BundleID = $('.app-header .appid .value').html()
             var searchRes = $('#shelves .ivu-table-row');
             var versionObj = []
@@ -232,6 +235,9 @@ async function circleSearch(page) {
         } else if (currentProp === 'downTotalLink') {
             // 下载量
             console.log('downTotalLink1')
+            console.log('*******************')
+            console.log('获取该app的总下载量')
+            console.log('*******************')
             var totalDownloadNum = $('#down-total-stat .col-box.active').html()
             if (totalDownloadNum === '' || totalDownloadNum === undefined) {
                 return '无数据'
@@ -240,6 +246,9 @@ async function circleSearch(page) {
             console.log('downTotalLinkk2')
         } else if (currentProp === 'dlink') {
             console.log('dlink1')
+            console.log('*******************')
+            console.log('获取该app的apk下载地址')
+            console.log('*******************')
             
             // apk下载地址
             if (market === '应用宝') {
