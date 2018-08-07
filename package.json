@@ -1,0 +1,16 @@
+{
+  "name": "puppeteer-qimaishuju",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node crawler",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "json-format": "^1.0.1",
+    "puppeteer": "^1.6.2"
+  }
+}
