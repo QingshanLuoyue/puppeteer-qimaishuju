@@ -4,8 +4,7 @@ const fs = require('fs')
 var searchCount = 0
 var useArr
 
-// var origindataPath = './origindata/search.json'
-var origindataPath = './origindata/t2.json'
+var origindataPath = './origindata/search.json'
 
 var searchTypeStoragePath = './storage/1-searchType.txt'
 
