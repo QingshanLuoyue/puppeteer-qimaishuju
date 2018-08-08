@@ -187,8 +187,6 @@ async function circleSearch(page) {
 
         next(currentWriteFilePath)
         // searchCount++
-
-        circleSearch(page)
     }
     console.log('\ncircleSearch: ')
     console.log('searchCount:', searchCount)
@@ -303,8 +301,6 @@ async function circleSearch(page) {
 
         next(currentWriteFilePath)
         // searchCount++
-
-        circleSearch(page)
     } else {
         if (reTryCount <= reTryMaxNum) {
             console.log('\n没有搜索到结果，可能是获取速度过快，js还未执行，第'+ reTryCount +'次重试···');
@@ -320,8 +316,6 @@ async function circleSearch(page) {
 
             next(currentWriteFilePath)
             // searchCount++
-
-            circleSearch(page)
         }
     }
 }
@@ -395,5 +389,7 @@ function next(filePath) {
             circleSearch(page)
             return true
         }
+    } else {
+        circleSearch(page)
     }
 }
