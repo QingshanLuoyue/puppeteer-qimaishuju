@@ -177,6 +177,19 @@ initStart()
 
 async function circleSearch(page) {
     url = useArr[searchCount][currentProp]
+    if (!url) {
+        console.log('\n********************************')
+        console.log('本次搜索地址为空或不存在，执行下一个搜索......')
+        console.log('搜索属性为：', currentProp)
+        console.log('********************************')
+        writeToTxt(currentWriteFilePath, useArr[searchCount])
+        writeStorage(searchCount, currentStoragePath)
+
+        next(currentWriteFilePath)
+        // searchCount++
+
+        circleSearch(page)
+    }
     console.log('\ncircleSearch: ')
     console.log('searchCount:', searchCount)
     console.log('url:', url)
