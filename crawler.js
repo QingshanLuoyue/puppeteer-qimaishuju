@@ -43,8 +43,10 @@ function productUseArr(readPath) {
         console.log(22)
         
     }
-    console.log('新一轮数据，数据长度 = ', result.length);    
-    console.log('********************************************************************\n');    
+    // console.log('新一轮数据，数据长度 = ', result.length);    
+    // console.log('********************************************************************\n');
+    logger('新一轮数据，数据长度 = ' + result.length)
+    logger('********************************************************************\n')
     return result
 }
 // useArr = JSON.parse('[' + fs.readFileSync(originDataPath, { encoding: 'utf-8'}).toString().replace(/\n$/, '').split('\n') + ']');
@@ -95,22 +97,31 @@ var propMap = {
 var searchTypeCount = readStorage(searchTypeStoragePath) // 读取程序搜索类型
 searchTypeCount = searchTypeCount ? parseInt(searchTypeCount) : 0;
 if (searchTypeCount >= 3) {
-    console.log('没有其他可以搜索了')
-    console.log('********************************************************************\n');
+    // console.log('没有其他可以搜索了')
+    // console.log('********************************************************************\n');
+    logger('没有其他可以搜索了')
+    logger('********************************************************************\n');
+    
     var processChild = require("child_process")
     var execFile = processChild.execFile
 
     execFile("node", ["6_toJson.js"], null, function (err, stdout, stderr) {
-        console.log("execFileSTDOUT:")
+        // console.log("execFileSTDOUT:")
+        logger("execFileSTDOUT:")
         // console.log("execFileSTDOUT:", JSON.stringify(stdout))
-        console.log("execFileSTDERR:")
+        // console.log("execFileSTDERR:")
+        logger("execFileSTDERR:")
         // console.log("execFileSTDERR:", JSON.stringify(stderr))
     })
-    console.log('生成数据完毕')
-    console.log('********************************************************************\n');
+    // console.log('生成数据完毕')
+    logger('生成数据完毕')
+    // console.log('********************************************************************\n');
+    logger('********************************************************************\n');
 
-    console.log('退出程序')
-    console.log('********************************************************************\n');
+    // console.log('退出程序')
+    logger('退出程序')
+    // console.log('********************************************************************\n');
+    logger('********************************************************************\n');
     process.exit(0)
 }
 searchType = searchTypeList[searchTypeCount]
@@ -127,7 +138,8 @@ useArr = productUseArr(currentReadFilePath)
 var searchCount = readStorage(currentStoragePath) // 读取程序中途断点位置
 searchCount = searchCount ? parseInt(searchCount) : 0;
 if (searchCount >= useArr.length) {
-    console.log('所有信息已经全部写入' + currentWriteFilePath + '文件！')
+    // console.log('所有信息已经全部写入' + currentWriteFilePath + '文件！')
+    logger('所有信息已经全部写入' + currentWriteFilePath + '文件！')
 }
 // 写入缓存
 function writeStorage(num, storagePath) {
@@ -139,14 +151,23 @@ function readStorage(storagePath) {
     return t ? t : ''
 }
 
-console.log('currentStoragePath = ', currentStoragePath)
-console.log('currentWriteFilePath = ', currentWriteFilePath)
-console.log('currentReadFilePath = ', currentReadFilePath)
-console.log('currentProp = ', currentProp)
-console.log('searchCount = ', searchCount)
-console.log('searchType = ', searchType)
-console.log('searchTypeCount = ', searchTypeCount)
-console.log('********************************************************************\n');
+// console.log('currentStoragePath = ', currentStoragePath)
+// console.log('currentWriteFilePath = ', currentWriteFilePath)
+// console.log('currentReadFilePath = ', currentReadFilePath)
+// console.log('currentProp = ', currentProp)
+// console.log('searchCount = ', searchCount)
+// console.log('searchType = ', searchType)
+// console.log('searchTypeCount = ', searchTypeCount)
+// console.log('********************************************************************\n');
+
+logger('currentStoragePath = ', currentStoragePath)
+logger('currentWriteFilePath = ', currentWriteFilePath)
+logger('currentReadFilePath = ', currentReadFilePath)
+logger('currentProp = ', currentProp)
+logger('searchCount = ', searchCount)
+logger('searchType = ', searchType)
+logger('searchTypeCount = ', searchTypeCount)
+logger('********************************************************************\n');
 
 /*********************************************************************************/
 
@@ -168,7 +189,10 @@ async function initStart() {
         // slowMo: 250,
     })
     page = await browser.newPage()
-    page.on('console', msg => console.log('pageLog:', msg.text()))
+    page.on('console', msg => {
+        // console.log('pageLog:', msg.text())
+        logger('pageLog:', msg.text())
+    })
 
     circleSearch(page)
     
@@ -178,19 +202,31 @@ initStart()
 async function circleSearch(page) {
     url = useArr[searchCount][currentProp]
     if (!url) {
-        console.log('\n********************************')
-        console.log('本次搜索地址为空或不存在，执行下一个搜索......')
-        console.log('搜索属性为：', currentProp)
-        console.log('********************************')
+        // console.log('\n********************************')
+        // console.log('本次搜索地址为空或不存在，执行下一个搜索......')
+        // console.log('搜索属性为：', currentProp)
+        // console.log('********************************')
+
+        logger('\n********************************')
+        logger('本次搜索地址为空或不存在，执行下一个搜索......')
+        logger('搜索属性为：', currentProp)
+        logger('********************************')
+
         writeToTxt(currentWriteFilePath, useArr[searchCount])
         writeStorage(searchCount, currentStoragePath)
 
         next(currentWriteFilePath)
+        return
         // searchCount++
     }
-    console.log('\ncircleSearch: ')
-    console.log('searchCount:', searchCount)
-    console.log('url:', url)
+    // console.log('\ncircleSearch: ')
+    // console.log('searchCount:', searchCount)
+    // console.log('url:', url)
+
+    logger('\ncircleSearch: ')
+    logger('searchCount:', searchCount)
+    logger('url:', url)
+
     await page.goto(url, {
         waitUntil: 'networkidle2'
     })
@@ -201,7 +237,7 @@ async function circleSearch(page) {
     
     
     let market = useArr[searchCount].market
-    const content = await page.evaluate((currentProp, market) => {
+    const content = await page.evaluate((currentProp, market, logger) => {
         console.log('currentProp = ', currentProp)
         if (currentProp === 'shelvesLink') {
             // 市场/bundleid
@@ -256,6 +292,7 @@ async function circleSearch(page) {
             console.log('downTotalLinkk2')
         } else if (currentProp === 'dlink') {
             console.log('dlink1')
+            // logger('dlink1')
             console.log('*******************')
             console.log('获取该app的apk下载地址')
             console.log('*******************')
@@ -287,8 +324,9 @@ async function circleSearch(page) {
             console.log('dlink2')
             
         }
-    }, currentProp, market)
-    console.log('content:', content)
+    }, currentProp, market, logger)
+    // console.log('content:', content)
+    logger('content:', content)
     if (content && content !== '无数据') {
         reTryCount = 1;
         if (content.data) {
@@ -303,12 +341,17 @@ async function circleSearch(page) {
         // searchCount++
     } else {
         if (reTryCount <= reTryMaxNum) {
-            console.log('\n没有搜索到结果，可能是获取速度过快，js还未执行，第'+ reTryCount +'次重试···');
-            console.log('url = ', url)
+            // console.log('\n没有搜索到结果，可能是获取速度过快，js还未执行，第'+ reTryCount +'次重试···');
+            // console.log('url = ', url)
+
+            logger('\n没有搜索到结果，可能是获取速度过快，js还未执行，第'+ reTryCount +'次重试···');
+            logger('url = ', url)
+
             reTryCount++;
             circleSearch(page)
         } else {
-            console.log('\n没有搜索到结果，可能是获取速度过快，js还未执行，第'+ reTryCount +'次重试失败，放弃，查询下一个···');
+            // console.log('\n没有搜索到结果，可能是获取速度过快，js还未执行，第'+ reTryCount +'次重试失败，放弃，查询下一个···');
+            logger('\n没有搜索到结果，可能是获取速度过快，js还未执行，第'+ reTryCount +'次重试失败，放弃，查询下一个···');
             reTryCount = 1
             // 失败超过限制次数，放弃，执行获取下一个链接
             writeToTxt(currentWriteFilePath, useArr[searchCount])
@@ -323,8 +366,10 @@ async function circleSearch(page) {
 // 写入数据
 function writeToTxt(filePath, html) {
     // console.log('写入 = ', JSON.stringify(html))
-    console.log('写入数据， 应用名称：' + html.appName)
-    console.log('********************************************************************\n');
+    // console.log('写入数据， 应用名称：' + html.appName)
+    // console.log('********************************************************************\n');
+    logger('写入数据， 应用名称：' + html.appName)
+    logger('********************************************************************\n');
     var str = '';
 
     str += JSON.stringify(html) + '\n';
@@ -337,8 +382,10 @@ function writeToTxt(filePath, html) {
 function next(filePath) {
     searchCount++
     if (searchCount > (useArr.length - 1)) {
-        console.log('所有详细信息已经全部写入' + filePath + '文件！')
-        console.log('********************************************************************\n');
+        // console.log('所有详细信息已经全部写入' + filePath + '文件！')
+        // console.log('********************************************************************\n');
+        logger('所有详细信息已经全部写入' + filePath + '文件！')
+        logger('********************************************************************\n');
     
         
         // 读取当前已经录入的数据作为原始数据
@@ -349,24 +396,35 @@ function next(filePath) {
         // 当前搜索类型序号加1
         searchTypeCount++
         writeStorage(searchTypeCount, searchTypeStoragePath)
-        console.log('searchTypeCount = ', searchTypeCount)
+        // console.log('searchTypeCount = ', searchTypeCount)
+        logger('searchTypeCount = ', searchTypeCount)
         if (searchTypeCount === 3) {
-            console.log('已经搜索完毕')
-            console.log('********************************************************************\n');
+            // console.log('已经搜索完毕')
+            // console.log('********************************************************************\n');
+            logger('已经搜索完毕')
+            logger('********************************************************************\n');
             var processChild = require("child_process")
             var execFile = processChild.execFile
     
             execFile("node", ["6_toJson.js"], null, function (err, stdout, stderr) {
-                console.log("execFileSTDOUT:")
+                // console.log("execFileSTDOUT:")
+                logger("execFileSTDOUT:")
                 // console.log("execFileSTDOUT:", JSON.stringify(stdout))
-                console.log("execFileSTDERR:")
+                // console.log("execFileSTDERR:")
+                logger("execFileSTDERR:")
                 // console.log("execFileSTDERR:", JSON.stringify(stderr))
             })
-            console.log('生成数据完毕')
-            console.log('********************************************************************\n');
+            // console.log('生成数据完毕')
+            // console.log('********************************************************************\n');
     
-            console.log('退出程序')
-            console.log('********************************************************************\n');
+            // console.log('退出程序')
+            // console.log('********************************************************************\n');
+
+            logger('生成数据完毕')
+            logger('********************************************************************\n');
+    
+            logger('退出程序')
+            logger('********************************************************************\n');
             process.exit(0)
         } else {
             // 获取当前搜索类型值
@@ -377,19 +435,43 @@ function next(filePath) {
             currentReadFilePath = originDataPathMap[searchType]
             currentProp = propMap[searchType]
     
-            console.log('新一轮搜索')
-            console.log('currentStoragePath = ', currentStoragePath)
-            console.log('currentWriteFilePath = ', currentWriteFilePath)
-            console.log('currentReadFilePath = ', currentReadFilePath)
-            console.log('currentProp = ', currentProp)
-            console.log('searchCount = ', searchCount)
-            console.log('searchType = ', searchType)
-            console.log('searchTypeCount = ', searchTypeCount)
-            console.log('********************************************************************\n');
+            // console.log('新一轮搜索')
+            // console.log('currentStoragePath = ', currentStoragePath)
+            // console.log('currentWriteFilePath = ', currentWriteFilePath)
+            // console.log('currentReadFilePath = ', currentReadFilePath)
+            // console.log('currentProp = ', currentProp)
+            // console.log('searchCount = ', searchCount)
+            // console.log('searchType = ', searchType)
+            // console.log('searchTypeCount = ', searchTypeCount)
+            // console.log('********************************************************************\n');
+
+            logger('新一轮搜索')
+            logger('currentStoragePath = ', currentStoragePath)
+            logger('currentWriteFilePath = ', currentWriteFilePath)
+            logger('currentReadFilePath = ', currentReadFilePath)
+            logger('currentProp = ', currentProp)
+            logger('searchCount = ', searchCount)
+            logger('searchType = ', searchType)
+            logger('searchTypeCount = ', searchTypeCount)
+            logger('********************************************************************\n');
             circleSearch(page)
             return true
         }
     } else {
         circleSearch(page)
     }
+}
+
+function logger() {
+    let arr = [].slice.call(arguments, 0)
+    let str = ''
+    for (let index = 0; index < arr.length; index++) {
+        if (typeof arr[index] == 'object') {
+            str += JSON.stringify(arr[index])
+        } else {
+            str += arr[index]
+        }
+    }
+    console.log.apply(console, arguments)
+    fs.writeFileSync('./log.txt', str + '\n', {encoding: 'utf-8', flag: 'a'})
 }

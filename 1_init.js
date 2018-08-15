@@ -1,6 +1,8 @@
 var fs = require('fs');
 
 function writeToTxt() {
+	fs.writeFileSync('./log.txt', '');
+
 	fs.writeFileSync('./tempdata/3-downloadPage.txt', '');
 	fs.writeFileSync('./tempdata/4-downloadNum.txt', '');
 	fs.writeFileSync('./tempdata/5-finalData.txt', '');
