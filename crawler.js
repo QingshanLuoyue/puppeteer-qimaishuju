@@ -258,24 +258,39 @@ async function circleSearch(page) {
                 })
             })
             var finalRes = [];
+            var otherMarket = [];
+            var tmp = 0;
+
             for (var m = 0; m < versionObj.length; m++) {
                 if (versionObj[m].market === '应用宝' && versionObj[m].dlink) {
                     finalRes = versionObj[m];
+                    tmp = m;
                     break;
                 } else if (versionObj[m].market === '百度' && versionObj[m].dlink) {
                     finalRes = versionObj[m]
+                    tmp = m;
                     break;
                 } else if (versionObj[m].market === '360' && versionObj[m].dlink) {
                     finalRes = versionObj[m]
+                    tmp = m;
                     break;
                 }
             }
-            if (finalRes.length === 0) {
-                return '无数据'
-            } else if (!finalRes.dlink) {
+            var count = 1;
+            for (var k = 0; k < versionObj.length; k++) {
+                if (k !== tmp && versionObj[k].dlink && versionObj[k].dlink !== '未上架' && versionObj[k].dlink !== '-' && versionObj[k].dlink !== '') {
+                    // otherMarket.push(versionObj[k])
+                    otherMarket['market' + count] = versionObj[k].market
+                    otherMarket['v' + count] = versionObj[k].v
+                    otherMarket['dlink' + count] = versionObj[k].dlink
+                    count++
+                }
+            }
+            if (finalRes.length === 0 && otherMarket.length === 0) {
                 return '无数据'
             }
-            return {data: finalRes, code: 'page'};
+
+            return {data: {...finalRes, ...otherMarket}, code: 'page'};
                 
             console.log('shelvesLink2')
         } else if (currentProp === 'downTotalLink') {
