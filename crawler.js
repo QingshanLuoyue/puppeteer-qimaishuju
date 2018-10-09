@@ -231,7 +231,7 @@ async function circleSearch(page) {
         waitUntil: 'networkidle2'
     })
     await page.mainFrame().addScriptTag({
-        url: 'https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js'
+        url: 'https://www.zego.im/static/js/jquery-1.11.3.min.js'
     })
     await page.waitFor(2000)
     
@@ -251,12 +251,13 @@ async function circleSearch(page) {
             searchRes.each(function(index, item){
                 versionObj.push({
                     market: $(item).find('.ivu-table-column-center').eq(0).find('.ivu-table-cell span').html(),
-                    appName: $(item).find('.ivu-table-column-center').eq(2).find('.ivu-table-cell div').html(),
-                    v: $(item).find('.ivu-table-column-center').eq(3).find('.ivu-table-cell div').html(),
-                    dlink: $(item).find('.ivu-table-column-center').eq(4).find('.ivu-table-cell a').attr('href'),
+                    appName: $(item).find('.ivu-table-column-center').eq(1).find('.ivu-table-cell .app-info .info-content a').html(),
+                    v: $(item).find('.ivu-table-column-center').eq(2).find('.ivu-table-cell div').html(),
+                    dlink: $(item).find('.ivu-table-column-center').eq(3).find('.ivu-table-cell a').attr('href'),
                     bundleID: BundleID
                 })
             })
+            // console.log('versionObj = ', JSON.stringify(versionObj))
             var finalRes = [];
             var otherMarket = [];
             var tmp = 0;
@@ -299,7 +300,7 @@ async function circleSearch(page) {
             console.log('*******************')
             console.log('获取该app的总下载量')
             console.log('*******************')
-            var totalDownloadNum = $('#down-total-stat .col-box.active').html()
+            var totalDownloadNum = $('#down-trend .des .con').eq(0).text()
             if (totalDownloadNum === '' || totalDownloadNum === undefined) {
                 return '无数据'
             }
